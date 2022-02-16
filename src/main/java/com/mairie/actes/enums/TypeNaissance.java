@@ -4,5 +4,6 @@ import javax.persistence.*;
 
 public enum TypeNaissance {
     NORMAL,
-    RETARD;
+    RETARD,
+    AUTRE
 }

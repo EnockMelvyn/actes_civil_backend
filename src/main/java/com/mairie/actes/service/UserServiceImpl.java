@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepo.findByUsername(username);
+        User user = userRepo.findByUsername(username).get();
         if (user == null) {
             log.error("Utilisateur inexistant dans la base");
             throw  new UsernameNotFoundException("Utilisateur inexistant dans la base");
@@ -44,8 +44,24 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User saveUser(User user) {
+    public User saveUser(User user) throws Exception{
         log.info("Enregistrement d'un nouvel utilisateur {}", user.getUsername());
+        if(userRepo.findByUsername(user.getUsername()).isPresent()){
+            throw new Exception("Utilisateur existant");
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepo.save(user);
+    }
+
+    @Override
+    public User updateUser(User user) throws Exception{
+        log.info("Infos utilisateur {} mises à jour", user.getUsername());
+        if(userRepo.findByUsername(user.getUsername()).isPresent()){
+            user.setId(userRepo.findByUsername(user.getUsername()).get().getId());
+        }
+        else {
+            throw new Exception("Utilisateur inexistant");
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepo.save(user);
     }
@@ -59,16 +75,24 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public void addRoleToUser(String username, String roleName) {
         log.info("Ajout d'un role {} au user {}",roleName, username);
-        User user = userRepo.findByUsername(username);
+        User user = userRepo.findByUsername(username).get();
         Role role = roleRepo.findByName(roleName);
 
         user.getRoles().add(role);
+    }
+    @Override
+    public void removeRoleToUser(String username, String roleName) {
+        log.info("Retrait du role {} au user {}",roleName, username);
+        User user = userRepo.findByUsername(username).get();
+        Role role = roleRepo.findByName(roleName);
+
+        user.getRoles().remove(role);
     }
 
     @Override
     public User getUser(String username) {
         log.info("Recherche de l'utilisateur {}", username);
-        return userRepo.findByUsername(username);
+        return userRepo.findByUsername(username).get();
     }
 
     @Override

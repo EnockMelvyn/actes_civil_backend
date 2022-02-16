@@ -26,7 +26,7 @@ public class Deces implements Serializable {
     @OneToOne(cascade=CascadeType.ALL)
     private Personne mere;
     @Enumerated(EnumType.STRING)
-    private StatutActe statutActe = StatutActe.EN_ATTENTE;
+    private StatutActe statutActe = StatutActe.VALIDE;
     private LocalDateTime dateDeces;
     private String lieuDeces;
     private LocalDateTime dateDeclaration;

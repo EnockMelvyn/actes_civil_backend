@@ -49,10 +49,16 @@ public class UserController {
     }
 
     @PostMapping("/user/save")
-    public ResponseEntity<User> saveUser(@RequestBody User user){
+    public ResponseEntity<User> saveUser(@RequestBody User user) throws Exception{
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("api/user/save").toUriString());
         return ResponseEntity.created(uri).body(userService.saveUser(user));
     }
+    @PutMapping("/user/update")
+    public ResponseEntity<User> updateUser(@RequestBody User user) throws Exception{
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("api/user/save").toUriString());
+        return ResponseEntity.created(uri).body(userService.updateUser(user));
+    }
+
 
     @PostMapping("/role/save")
     public ResponseEntity<Role> saveRole(@RequestBody Role role){
@@ -64,6 +70,13 @@ public class UserController {
     public ResponseEntity<?> saveRole(@RequestBody RoleToUserForm form){
         log.info("Mon token {}" , form);
         userService.addRoleToUser(form.getUsername(), form.getRolename());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/role/removetouser")
+    public ResponseEntity<?> removeRole(@RequestBody RoleToUserForm form){
+        log.info("Mon token {}" , form);
+        userService.removeRoleToUser(form.getUsername(), form.getRolename());
         return ResponseEntity.ok().build();
     }
 

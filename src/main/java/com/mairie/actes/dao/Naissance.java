@@ -25,7 +25,7 @@ public class Naissance implements Serializable {
     @Enumerated(EnumType.STRING)
     private TypeNaissance typeNaissance;
     @Enumerated(EnumType.STRING)
-    private StatutActe statutActe = StatutActe.EN_ATTENTE;
+    private StatutActe statutActe = StatutActe.VALIDE;
     @ManyToOne
     private Personne enfant;
     @ManyToOne(fetch = FetchType.EAGER)
